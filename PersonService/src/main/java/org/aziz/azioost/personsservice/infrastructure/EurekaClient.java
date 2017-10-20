@@ -1,4 +1,4 @@
-package org.aziz.azioost.personsservice.web;
+package org.aziz.azioost.personsservice.infrastructure;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 @RestController
-class ServiceController {
+class EurekaClient {
 
     @Autowired
     private DiscoveryClient discoveryClient;

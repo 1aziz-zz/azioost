@@ -6,7 +6,9 @@ import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,27 +16,26 @@ import java.util.Set;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @NodeEntity
-public class Person  {
+public class Person {
 
     @GraphId
     private Long id;
     private String firstName, lastName, email;
 
     private int age;
-/*
-    TODO:
-    @Relationship(type = "ENROLLED_IN")
-     private List<Course> courses = new ArrayList<>();*/
 
-    @Relationship(type = "KNOWS", direction = Relationship.UNDIRECTED)
+    @Relationship(type = "ENROLLED_IN")
+    private List<Course> courses = new ArrayList<>();
+
+    @Relationship(type = "KNOWS")
     private Set<Person> people = new HashSet<>();
 
 
-    @Relationship(type = "HAS_POST", direction = Relationship.UNDIRECTED)
+    @Relationship(type = "HAS_POST")
     private Set<Post> posts = new HashSet<>();
 
 
-    @Relationship(type = "HAS_COMMENT", direction = Relationship.UNDIRECTED)
+    @Relationship(type = "HAS_COMMENT")
     private Set<Comment> comments = new HashSet<>();
 
 
@@ -115,10 +116,28 @@ public class Person  {
         this.comments = comments;
     }
 
-    public void addNewPerson(Person person) {
-        if (!people.contains(person) && !person.equals(this)) {
-            people.add(person);
-        }
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public void addCourse(Course course) {
+        this.courses.add(course);
+    }
+
+    public void addFriend(Person person) {
+        this.people.add(person);
+    }
+
+    public void addPost(Post post) {
+        this.posts.add(post);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
     @Override
@@ -130,6 +149,7 @@ public class Person  {
 
         return (getId() != null ? getId().equals(person.getId()) : person.getId() == null) && (getFirstName() != null ? getFirstName().equals(person.getFirstName()) : person.getFirstName() == null) && (getLastName() != null ? getLastName().equals(person.getLastName()) : person.getLastName() == null) && (getEmail() != null ? getEmail().equals(person.getEmail()) : person.getEmail() == null);
     }
+
 
     @Override
     public int hashCode() {

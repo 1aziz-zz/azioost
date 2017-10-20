@@ -19,7 +19,7 @@ public class Post {
 
     private Long id;
     private String title, body;
-    @Relationship(type = "HAS_COMMENT", direction = Relationship.UNDIRECTED)
+    @Relationship(type = "HAS_COMMENT")
 
     private Set<Comment> comments = new HashSet<>();
 
@@ -58,5 +58,20 @@ public class Post {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Post post = (Post) o;
+
+        return getId() != null ? getId().equals(post.getId()) : post.getId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
     }
 }
