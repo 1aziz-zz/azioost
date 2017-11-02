@@ -13,7 +13,7 @@ type PostController struct {
 }
 
 func (pc *PostController) PostController(ps *services.PostService) {
-	ps.Init()
+
 	pc.postService = ps
 }
 
