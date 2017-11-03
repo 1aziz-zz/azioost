@@ -1,7 +1,9 @@
 package data
 
+import "gopkg.in/mgo.v2/bson"
+
 type Post struct {
-	Id    int    `api:"id"`
-	Title string `api:"title"`
-	Body string `api:"body"`
+	ID     bson.ObjectId `bson:"_id,omitempty"`
+	Title  string        `api:"title"`
+	Body   string        `api:"body"`
 }

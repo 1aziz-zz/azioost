@@ -1,7 +1,10 @@
 package data
 
+import "gopkg.in/mgo.v2/bson"
+
 type Comment struct {
-	Id   int    `api:"id"`
-	Body string `api:"body"`
-	Post Post   `api:"Post"`
+	ID     bson.ObjectId `bson:"_id,omitempty"`
+	Title  string        `api:"title"`
+	Body   string        `api:"body"`
+
 }
