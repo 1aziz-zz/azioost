@@ -43,7 +43,7 @@ namespace CatalogService.Core.Persistence.Repositories
 
         public async Task<UpdateResult> UpdateCourse(string id, string body)
         {
-            var filter = Builders<Course>.Filter.Eq(s => s.Id, id);
+            var filter = Builders<Course>.Filter.Eq(s => s.Id.ToString(), id);
             var update = Builders<Course>.Update
                 .Set(s => s.Body, body);
             return await _context.Courses.UpdateOneAsync(filter, update);

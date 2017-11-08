@@ -7,7 +7,7 @@ namespace CourseService.Core.Persistence
     {
         private static readonly IConfigurationRoot Configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile(@"appsettings.json", true)
+            .AddJsonFile(@"/run/secrets/mongo_secrets.json", true)
             .Build();
 
         public string ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;

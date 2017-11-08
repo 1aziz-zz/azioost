@@ -1,0 +1,48 @@
+version: "3.1"
+services:
+
+     # MongoDB is skipped, using MongoDB Atlas instead
+     # Neo4J is only for test
+
+
+    eureka:
+       build: ./services/eurekaservice
+       ports:
+          - "8761:8761"
+
+       depends_on:
+          - neo4j
+   
+    neo4j:
+       image: neo4j:latest
+       ports:
+          - "7474:7474"
+          - "7687:7687"
+       environment:
+          NEO4J_AUTH: "none"
+
+    courseservice:
+       build: ./services/courseservice
+       ports:
+          - "5001:5001"
+       secrets:
+          - mongo_secrets
+       depends_on:
+          - eureka
+       links:
+          - eureka:eureka-server-docker
+    
+    personsservice:
+       build: ./services/personservice
+       ports:
+          - "5002:5002"
+       depends_on:
+          - eureka
+       links:
+          - eureka:eureka-server-docker
+          - neo4j:neo4j-server-docker
+          - courseservice:course-service-docker
+
+secrets:
+    mongo_secrets:
+      file: ./secrets/mongo_secrets.json

@@ -3,7 +3,6 @@ package org.aziz.azioost.personsservice.web;
 import org.aziz.azioost.personsservice.model.Comment;
 import org.aziz.azioost.personsservice.model.Person;
 import org.aziz.azioost.personsservice.model.Post;
-import org.aziz.azioost.personsservice.model.repositories.PersonRepository;
 import org.aziz.azioost.personsservice.service.CommentService;
 import org.aziz.azioost.personsservice.service.CourseService;
 import org.aziz.azioost.personsservice.service.PersonService;
@@ -13,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
 
 /**
  * Created by aziz on 10/19/2017.
@@ -50,13 +49,16 @@ public class MainController {
         post.getComments().add(comment);
 
         personService.addPost(personB, post);
-        personService.addCourseToPerson(personA, "59e9e8a5c684410fb0d9849c");
-        personService.addCourseToPerson(personA, "59e9eb5a9980e6213c190f0c");
-        personService.addCourseToPerson(personB, "59e9e8a5c684410fb0d9849c");
+        personService.addCourseToPerson(personA, "59fc7cd367007031a0f257c2");
+        personService.addCourseToPerson(personA, "59fc7cd367007031a0f257c2");
+        personService.addCourseToPerson(personB, "59fc7cd367007031a0f257c2");
 
+        
 
         personService.addComment(personA, comment);
         personService.addFriendship(personA, personB);
+
+
         personService.save(personA);
 
         return personService.getAll();

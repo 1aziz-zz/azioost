@@ -16,7 +16,7 @@ public class CourseService extends Repository<Course, CourseRepository> {
     private RestTemplate restTemplate;
 
     public Course[] getAllCourses() {
-        return restTemplate.getForObject("http://course-service/api/Course", Course[].class);
+        return restTemplate.getForObject("http://course-service-docker:5001/api/Course", Course[].class);
 
     }
 

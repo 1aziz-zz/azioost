@@ -1,7 +1,6 @@
 package org.aziz.azioost.personsservice.model.repositories;
 
 import org.aziz.azioost.personsservice.model.Comment;
-import org.aziz.azioost.personsservice.model.Course;
 import org.springframework.data.neo4j.repository.GraphRepository;
 
 /**
