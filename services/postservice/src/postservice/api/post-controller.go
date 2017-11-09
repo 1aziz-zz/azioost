@@ -62,8 +62,9 @@ func (pc PostController) GetAll(w http.ResponseWriter, request *http.Request) {
 
 func (pc *PostController) Add(w http.ResponseWriter, request *http.Request) {
 	request.ParseForm()
-	id := request.Form.Get("id")
-	post := data.Post{Body: request.Form.Get("body"), Title: request.Form.Get("title"), Id: bson.ObjectIdHex(id)}
+
+	post := data.Post{Body: request.Form.Get("body"), Title: request.Form.Get("title")}
+
 	pc.postService.Add(&post)
 	w.Write([]byte("{\"result\":\"OK\"}"))
 

@@ -4,6 +4,7 @@ import (
 	"postservice/data"
 	"gopkg.in/mgo.v2/bson"
 	"fmt"
+
 )
 
 type PostService struct {
@@ -29,13 +30,16 @@ func (pc *PostService) GetAll() []data.Post {
 	return results
 }
 
-func (pc *PostService) Add(post *data.Post) error {
+func (pc *PostService) Add(post *data.Post)  {
+
 	session, err, collection := pc.db.GetCollection(pc.collectionName)
+	post.Id = bson.NewObjectId()
 	if err != nil {
 		panic(err)
 	}
 	defer session.Close()
-	return collection.Insert(&post)
+	err = collection.Insert(&post)
+
 }
 
 func (pc *PostService) Edit(post *data.Post) error {
