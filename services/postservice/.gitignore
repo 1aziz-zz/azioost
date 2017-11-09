@@ -15,3 +15,6 @@
 .idea
 pkg
 bin
+github.com
+gopkg.in
+golang.org

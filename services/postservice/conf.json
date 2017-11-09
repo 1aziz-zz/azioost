@@ -1,0 +1,10 @@
+{
+  "DbUser": "aziz",
+  "DbPass": "azizazizaziz",
+  "DbName": "posts-service",
+  "DbServers": [
+    "cluster0-shard-00-00-3mxog.mongodb.net:27017",
+    "cluster0-shard-00-02-3mxog.mongodb.net:27017",
+    "cluster0-shard-00-01-3mxog.mongodb.net:27017"
+  ]
+}

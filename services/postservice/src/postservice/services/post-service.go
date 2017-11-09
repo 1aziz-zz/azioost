@@ -2,8 +2,8 @@ package services
 
 import (
 	"postservice/data"
-	"log"
 	"gopkg.in/mgo.v2/bson"
+	"fmt"
 )
 
 type PostService struct {
@@ -46,7 +46,7 @@ func (pc *PostService) Edit(post *data.Post) error {
 	defer session.Close()
 	update := bson.M{"Body": post.Body}
 
-	return collection.Update(post.ID, update)
+	return collection.Update(post.Id, update)
 }
 
 func (pc *PostService) Remove(post data.Post) {
@@ -58,16 +58,19 @@ func (pc *PostService) Remove(post data.Post) {
 	collection.Remove(post)
 }
 
-func (pc *PostService) Get(id string) data.Post {
+func (pc *PostService) Get(id bson.ObjectId) data.Post {
+	fmt.Println(1)
+
 	session, err, collection := pc.db.GetCollection(pc.collectionName)
-	if err != nil {
-		panic(err)
-	}
+
 	defer session.Close()
 	post := data.Post{}
-	err2 := collection.FindId(bson.ObjectIdHex(id)).One(&post)
-	if err2 != nil {
-		log.Fatal(err2)
+	if collection.FindId(id).One(&post); err != nil {
+
+		return post
 	}
+
 	return post
 }
+
+

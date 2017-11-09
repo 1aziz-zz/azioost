@@ -1,39 +1,31 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"postservice/api"
-	"postservice/services"
 	"fmt"
-	"os"
-	"encoding/json"
+	"postservice/api"
+	"log"
+	"net/http"
 )
 
 func main() {
 
-	router := gin.Default()
-	postService := services.PostService{}
-	postController := api.PostController{}
+	var appName= "post-service"
+	fmt.Printf("Staring %v\n", appName)
 
-	postService.Init(getDbSettings("conf.json"), "posts")
-	postController.PostController(&postService)
+	StartWebServer("5003")
 
-	router.GET("/", postController.GetAll)
-	router.PUT("/edit", postController.Edit)
-	router.POST("/remove", postController.Remove)
-	router.POST("/create", postController.Add)
-	router.GET("/id/:id/", postController.Get)
 
-	router.Run()
+
 }
-func getDbSettings(file string) services.DbService {
-	var config services.DbService
-	configFile, err := os.Open(file)
-	defer configFile.Close()
+func StartWebServer(port string) {
+	r := api.NewRouter()
+	http.Handle("/", r)
+
+	log.Println("Starting HTTP server at " + port)
+	err := http.ListenAndServe(":"+port, nil)
+
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println("An error occured starting the server at port " + port)
+		log.Println("Error: " + err.Error())
 	}
-	jsonParser := json.NewDecoder(configFile)
-	jsonParser.Decode(&config)
-	return config
 }
