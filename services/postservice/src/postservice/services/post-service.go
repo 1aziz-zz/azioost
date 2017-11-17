@@ -4,7 +4,6 @@ import (
 	"postservice/data"
 	"gopkg.in/mgo.v2/bson"
 	"fmt"
-
 )
 
 type PostService struct {
@@ -30,7 +29,7 @@ func (pc *PostService) GetAll() []data.Post {
 	return results
 }
 
-func (pc *PostService) Add(post *data.Post)  {
+func (pc *PostService) Add(post *data.Post) {
 
 	session, err, collection := pc.db.GetCollection(pc.collectionName)
 	post.Id = bson.NewObjectId()
@@ -77,4 +76,28 @@ func (pc *PostService) Get(id bson.ObjectId) data.Post {
 	return post
 }
 
+func (pc *PostService) PostBodyExists(body string) bool {
+	_, _, collection := pc.db.GetCollection(pc.collectionName)
+	count, err := collection.Find(bson.M{"body": body}).Count()
+	fmt.Print(count)
+	if err == nil {
+		if count == 0 {
+			return true
+		}
+	}
 
+	return false
+}
+
+func (pc *PostService) PostExists(id string) bool {
+	_, _, collection := pc.db.GetCollection(pc.collectionName)
+	count, err := collection.Find(bson.M{"id": id}).Count()
+	fmt.Print(count)
+	if err == nil {
+		if count == 0 {
+			return true
+		}
+	}
+
+	return false
+}

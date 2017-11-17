@@ -62,11 +62,20 @@ func (pc PostController) GetAll(w http.ResponseWriter, request *http.Request) {
 
 func (pc *PostController) Add(w http.ResponseWriter, request *http.Request) {
 	request.ParseForm()
+	body := request.Form.Get("body")
+	title := request.Form.Get("title")
 
-	post := data.Post{Body: request.Form.Get("body"), Title: request.Form.Get("title")}
+	result := "ERROR"
 
-	pc.postService.Add(&post)
-	w.Write([]byte("{\"result\":\"OK\"}"))
+	if body != "" && title != "" {
+		if pc.postService.PostBodyExists(body) {
+			post := data.Post{Body: request.Form.Get("body"), Title: request.Form.Get("title")}
+			pc.postService.Add(&post)
+			result = "OK"
+		}
+
+	}
+	w.Write([]byte("{\"result\":\"" + result + "\"}"))
 
 }
 
@@ -83,10 +92,16 @@ func (pc *PostController) Edit(w http.ResponseWriter, request *http.Request) {
 
 func (pc *PostController) Remove(w http.ResponseWriter, request *http.Request) {
 	request.ParseForm()
-	id := request.Form.Get("id")
+	id := request.Form.Get("_id")
+	result := "ERROR"
+
+	if id != "" {
+		if pc.postService.PostBodyExists() {
+			pc.postService.Remove(pc.postService.Get(bson.ObjectIdHex(id)))
+		}
+	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	pc.postService.Remove(pc.postService.Get(bson.ObjectIdHex(id)))
-	w.Write([]byte("{\"result\":\"OK\"}"))
+	w.Write([]byte("{\"result\":\"" + result + "\"}"))
 }
 
 func (pc *PostController) Get(w http.ResponseWriter, request *http.Request) {
