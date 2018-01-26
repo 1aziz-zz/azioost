@@ -10,14 +10,24 @@ import (
 
 func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
-	postService := services.PostService{}
+
+	dbSettings := getDbSettings("conf.json")
+
 	postController := PostController{}
+	commentController := CommentController{}
 
-	postService.Init(getDbSettings("conf.json"), "posts")
+	postService := services.PostService{}
+	postService.PostService(dbSettings, "posts")
 
-	postController.PostController(&postService)
+	commentService := services.CommentService{}
+	commentService.CommentService(dbSettings, "comments")
 
-	for _, route := range postController.GetRoutes() {
+	postController.postService = &postService
+	commentController.commentService = &commentService
+
+	services.Routes{}
+
+	for _, route := range services..GetRoutes() {
 		router.Methods(route.Method).
 			Path(route.Pattern).
 			Name(route.Name).

@@ -3,7 +3,6 @@ package services
 import (
 	"postservice/data"
 	"gopkg.in/mgo.v2/bson"
-	"fmt"
 )
 
 type PostService struct {
@@ -12,13 +11,13 @@ type PostService struct {
 	collectionName string
 }
 
-func (pc *PostService) Init(db DbService, collectionName string) {
-	pc.db = db
-	pc.collectionName = collectionName
+func (ps *PostService) PostService(db DbService, collectionName string) {
+	ps.db = db
+	ps.collectionName = collectionName
 }
 
-func (pc *PostService) GetAll() []data.Post {
-	session, err, collection := pc.db.GetCollection(pc.collectionName)
+func (ps *PostService) GetAll() []data.Post {
+	session, err, collection := ps.db.GetCollection(ps.collectionName)
 
 	if err != nil {
 		panic(err)
@@ -29,9 +28,9 @@ func (pc *PostService) GetAll() []data.Post {
 	return results
 }
 
-func (pc *PostService) Add(post *data.Post) {
+func (ps *PostService) Add(post *data.Post) {
 
-	session, err, collection := pc.db.GetCollection(pc.collectionName)
+	session, err, collection := ps.db.GetCollection(ps.collectionName)
 	post.Id = bson.NewObjectId()
 	if err != nil {
 		panic(err)
@@ -41,19 +40,26 @@ func (pc *PostService) Add(post *data.Post) {
 
 }
 
-func (pc *PostService) Edit(post *data.Post) error {
-	session, err, collection := pc.db.GetCollection(pc.collectionName)
+func (ps *PostService) Edit(post *data.Post) error {
+	session, err, collection := ps.db.GetCollection(ps.collectionName)
+
+	colQueried := bson.M{"_id": post.Id}
+
+	if post.Title != "" {
+		err = collection.Update(colQueried, bson.M{"$set": bson.M{"title": post.Title}})
+	}
+	if post.Body != "" {
+		err = collection.Update(colQueried, bson.M{"$set": bson.M{"body": post.Body}})
+	}
 	if err != nil {
 		panic(err)
 	}
 	defer session.Close()
-	update := bson.M{"Body": post.Body}
-
-	return collection.Update(post.Id, update)
+	return err
 }
 
-func (pc *PostService) Remove(post data.Post) {
-	session, err, collection := pc.db.GetCollection(pc.collectionName)
+func (ps *PostService) Remove(post data.Post) {
+	session, err, collection := ps.db.GetCollection(ps.collectionName)
 	if err != nil {
 		panic(err)
 	}
@@ -61,10 +67,9 @@ func (pc *PostService) Remove(post data.Post) {
 	collection.Remove(post)
 }
 
-func (pc *PostService) Get(id bson.ObjectId) data.Post {
-	fmt.Println(1)
+func (ps *PostService) Get(id bson.ObjectId) data.Post {
 
-	session, err, collection := pc.db.GetCollection(pc.collectionName)
+	session, err, collection := ps.db.GetCollection(ps.collectionName)
 
 	defer session.Close()
 	post := data.Post{}
@@ -76,23 +81,20 @@ func (pc *PostService) Get(id bson.ObjectId) data.Post {
 	return post
 }
 
-func (pc *PostService) PostBodyExists(body string) bool {
-	_, _, collection := pc.db.GetCollection(pc.collectionName)
+func (ps *PostService) CheckPostBody(body string) bool {
+	_, _, collection := ps.db.GetCollection(ps.collectionName)
 	count, err := collection.Find(bson.M{"body": body}).Count()
-	fmt.Print(count)
 	if err == nil {
 		if count == 0 {
 			return true
 		}
 	}
-
 	return false
 }
 
-func (pc *PostService) PostExists(id string) bool {
-	_, _, collection := pc.db.GetCollection(pc.collectionName)
+func (ps *PostService) PostExists(id string) bool {
+	_, _, collection := ps.db.GetCollection(ps.collectionName)
 	count, err := collection.Find(bson.M{"id": id}).Count()
-	fmt.Print(count)
 	if err == nil {
 		if count == 0 {
 			return true

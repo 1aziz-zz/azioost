@@ -18,8 +18,8 @@ func main() {
 
 }
 func StartWebServer(port string) {
-	r := api.NewRouter()
-	http.Handle("/", r)
+	router := api.NewRouter()
+	http.Handle("/", router)
 
 	log.Println("Starting HTTP server at " + port)
 	err := http.ListenAndServe(":"+port, nil)
